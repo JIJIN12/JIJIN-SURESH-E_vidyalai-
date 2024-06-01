@@ -2,7 +2,8 @@ import React from 'react';
 
 const App = ({ Component, pageProps }) => (
   <React.Fragment>
-    <Component {...pageProps} />
+    <Component {...pageProps}  />
+   
   </React.Fragment>
 );
 

@@ -54,7 +54,7 @@ const Button = styled.button(() => ({
   fontSize: '20px',
   cursor: 'pointer',
   height: '50px',
-  marginBottom:'40%'
+  marginBottom: '40%',
 }));
 
 const PrevButton = styled(Button)`
@@ -68,10 +68,17 @@ const NextButton = styled(Button)`
 const Post = ({ post }) => {
   const carouselRef = useRef(null);
   const [postdata, set_postdata] = useState([]);
+  const [userdata, set_userdata] = useState([]);
   const [noImagesMessage, setNoImagesMessage] = useState('');
   console.log(noImagesMessage);
 
-  // console.log(postdata);
+  // console.log(userdata);
+  console.log(postdata);
+  const mergedArray = userdata.map(item1 => {
+    const matchingItem = postdata.find(item2 => item2.id === item1.id);
+    return { ...item1, ...matchingItem };
+  });
+  console.log('mergedArray', mergedArray);
   useEffect(() => {
     axios
       .get('https://jsonplaceholder.typicode.com/albums/1/photos')
@@ -103,24 +110,24 @@ const Post = ({ post }) => {
   //     const imageWidth = carousel.children[0].offsetWidth; // dynamically calculate image width
   //     const visibleImages = Math.floor(carousel.offsetWidth / imageWidth);
   //     const maxScrollLeft = carousel.scrollWidth - carousel.offsetWidth;
-  
+
   //     const newScrollLeft = Math.min(carousel.scrollLeft + imageWidth * visibleImages, maxScrollLeft);
   //     console.log(newScrollLeft);
-  
+
   //     carousel.scrollTo({
   //       left: newScrollLeft,
   //       behavior: 'smooth',
   //     });
   //   }
   // };
-  
+
   // const handlePrevClick = () => {
   //   if (carouselRef.current) {
   //     const carousel = carouselRef.current;
   //     const imageWidth = carousel.children[0].offsetWidth; // dynamically calculate image width
   //     const visibleImages = Math.floor(carousel.offsetWidth / imageWidth);
   //     const maxScrollLeft = carousel.scrollWidth - carousel.offsetWidth;
-  
+
   //     const newScrollLeft = Math.max(carousel.scrollLeft - imageWidth * visibleImages, 0);
   // console.log(newScrollLeft);
   //     carousel.scrollTo({
@@ -133,28 +140,28 @@ const Post = ({ post }) => {
   //   if (carouselRef.current) {
   //     const carousel = carouselRef.current;
   //     const imageWidth = 300; // assuming each image is 300px wide
-  
+
   //     // Calculate new scroll position and ensure it's a multiple of 300
   //     let newScrollLeft = carousel.scrollLeft - imageWidth;
   //     newScrollLeft = Math.max(newScrollLeft - (newScrollLeft % imageWidth), 0);
-  
+
   //     carousel.scrollTo({
   //       left: newScrollLeft,
   //       behavior: 'smooth',
   //     });
   //   }
   // };
-  
+
   // const handleNextClick = () => {
   //   if (carouselRef.current) {
   //     const carousel = carouselRef.current;
   //     const imageWidth = 300; // assuming each image is 300px wide
   //     const maxScrollLeft = carousel.scrollWidth - carousel.offsetWidth;
-  
+
   //     // Calculate new scroll position and ensure it's a multiple of 300
   //     let newScrollLeft = carousel.scrollLeft + imageWidth;
   //     newScrollLeft = Math.min(newScrollLeft - (newScrollLeft % imageWidth), maxScrollLeft);
-  
+
   //     carousel.scrollTo({
   //       left: newScrollLeft,
   //       behavior: 'smooth',
@@ -170,13 +177,13 @@ const Post = ({ post }) => {
   //       setNoImagesMessage('No images to slide.');
   //       return;
   //     }
-  
+
   //     const imageWidth = 300; // assuming each image is 300px wide
-  
+
   //     // Calculate new scroll position and ensure it's a multiple of 300
   //     let newScrollLeft = carousel.scrollLeft - imageWidth;
   //     newScrollLeft = Math.max(newScrollLeft - (newScrollLeft % imageWidth), 0);
-  
+
   //     carousel.scrollTo({
   //       left: newScrollLeft,
   //       behavior: 'smooth',
@@ -184,24 +191,24 @@ const Post = ({ post }) => {
   //     setNoImagesMessage(''); // Clear the message if images are found
   //   }
   // };
-  
+
   // const handleNextClick = () => {
   //   if (carouselRef.current) {
   //     const carousel = carouselRef.current;
   //     const images = carousel.children;
-  
+
   //     if (images.length === 0) {
   //       setNoImagesMessage('No images to slide.');
   //       return;
   //     }
-  
+
   //     const imageWidth = 300; // assuming each image is 300px wide
   //     const maxScrollLeft = carousel.scrollWidth - carousel.offsetWidth;
-  
+
   //     // Calculate new scroll position and ensure it's a multiple of 300
   //     let newScrollLeft = carousel.scrollLeft + imageWidth;
   //     newScrollLeft = Math.min(newScrollLeft - (newScrollLeft % imageWidth), maxScrollLeft);
-  
+
   //     carousel.scrollTo({
   //       left: newScrollLeft,
   //       behavior: 'smooth',
@@ -209,33 +216,38 @@ const Post = ({ post }) => {
   //     setNoImagesMessage(''); // Clear the message if images are found
   //   }
   // };
+  useEffect(() => {
+    axios.get('/api/v1/users').then(Response => {
+      // console.log(Response);
+      set_userdata(Response.data);
+    });
+  }, []);
   const handlePrevClick = () => {
     if (carouselRef.current) {
       const carousel = carouselRef.current;
       const images = carousel.children;
-      
+
       console.log(images.length);
       if (images.length === 0) {
         setNoImagesMessage('No images to slide.');
         return;
       }
-  
+
       const imageWidth = 300; // assuming each image is 300px wide
       const maxScrollLeft = (images.length - 1) * imageWidth; // maximum scroll position
-  
+
       // Calculate new scroll position and ensure it's a multiple of 300
       let newScrollLeft = carousel.scrollLeft - imageWidth;
       newScrollLeft = Math.max(newScrollLeft - (newScrollLeft % imageWidth), 0);
-  
+
       carousel.scrollTo({
         left: newScrollLeft,
         behavior: 'smooth',
       });
-  
+
       // Check if the carousel is at the beginning or end
       if (newScrollLeft === 0) {
         setNoImagesMessage('Reached the start of the carousel.');
-        
       } else if (newScrollLeft === maxScrollLeft) {
         setNoImagesMessage('Reached the end of the carousel.');
       } else {
@@ -243,30 +255,33 @@ const Post = ({ post }) => {
       }
     }
   };
-  
+
   const handleNextClick = () => {
     if (carouselRef.current) {
       const carousel = carouselRef.current;
       const images = carousel.children;
-  
+
       console.log(images.length);
       if (images.length === 0) {
         setNoImagesMessage('No images to slide.');
         return;
       }
-  
+
       const imageWidth = 300; // assuming each image is 300px wide
       const maxScrollLeft = (images.length - 1) * imageWidth; // maximum scroll position
-  
+
       // Calculate new scroll position and ensure it's a multiple of 300
       let newScrollLeft = carousel.scrollLeft + imageWidth;
-      newScrollLeft = Math.min(newScrollLeft - (newScrollLeft % imageWidth), maxScrollLeft);
-  
+      newScrollLeft = Math.min(
+        newScrollLeft - (newScrollLeft % imageWidth),
+        maxScrollLeft,
+      );
+
       carousel.scrollTo({
         left: newScrollLeft,
         behavior: 'smooth',
       });
-  
+
       // Check if the carousel is at the beginning or end
       if (newScrollLeft === 0) {
         setNoImagesMessage('Reached the start of the carousel.');
@@ -277,17 +292,46 @@ const Post = ({ post }) => {
       }
     }
   };
-  
+
   // console.log(post);
   return (
     <PostContainer>
       <CarouselContainer>
         <Carousel ref={carouselRef}>
-          {postdata.map((image, index) => (
-            <CarouselItem key={index}>
-              <Image src={image.url} alt={post.title} />
-            </CarouselItem>
-          ))}
+          {mergedArray.map((image, index) => {
+            // Assuming name contains both first and last name
+            const [firstName, lastName] = image.name.split(' ');
+            const firstInitial = firstName ? firstName.charAt(0) : '';
+            const lastInitial = lastName ? lastName.charAt(0) : '';
+
+            return (
+              <div key={index}>
+                <CarouselItem>
+                  <div style={{ display: 'flex', padding: '6px 8px' }}>
+                    <div
+                      style={{
+                        background: 'grey',
+                        color: 'white',
+                        borderRadius: '50%',
+                        padding: '5px 7px',
+                        fontWeight: '500',
+                        fontSize: '2rem',
+                      }}
+                    >
+                      {firstInitial} {lastInitial}
+                    </div>
+                    <div style={{ margin: '.2rem .5rem' }}>
+                      <p style={{ fontWeight: '700', fontSize: '1rem' }}>
+                        {image.name}
+                      </p>
+                      <p style={{ fontSize: '.9rem' }}>{image.email}</p>
+                    </div>
+                  </div>
+                  <Image src={image.url} alt={post.title} />
+                </CarouselItem>
+              </div>
+            );
+          })}
         </Carousel>
         <PrevButton onClick={handlePrevClick}>&#10094;</PrevButton>
         <NextButton onClick={handleNextClick}>&#10095;</NextButton>
@@ -300,14 +344,14 @@ const Post = ({ post }) => {
   );
 };
 
-Post.propTypes = {
-  post: PropTypes.shape({
-    content: PropTypes.any,
-    images: PropTypes.shape({
-      map: PropTypes.func,
-    }),
-    title: PropTypes.any,
-  }),
-};
+// Post.propTypes = {
+//   post: PropTypes.shape({
+//     content: PropTypes.any,
+//     images: PropTypes.shape({
+//       map: PropTypes.func,
+//     }),
+//     title: PropTypes.any,
 
+//   }),
+// };
 export default Post;

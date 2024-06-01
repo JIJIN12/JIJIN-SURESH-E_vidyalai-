@@ -48,13 +48,13 @@ const withUserData = WrappedComponent =>
 
     async componentDidMount() {
       const { data: users } = await axios.get('/api/v1/users');
+      console.log('users',users);
 
       this.setState({
         users,
         filteredUsers: users,
       });
     }
-
     componentDidUpdate(prevProps, prevState) {
       if (
         prevState.searchName !== this.state.searchName ||
