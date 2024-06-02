@@ -80,12 +80,17 @@ const Post = ({ post }) => {
   });
   console.log('mergedArray', mergedArray);
   useEffect(() => {
-    axios
+    try {
+      axios
       .get('https://jsonplaceholder.typicode.com/albums/1/photos')
       .then(Response => {
         // console.log(Response.data);
         set_postdata(Response.data);
       });
+    } catch (error) {
+      console.log(error);
+    }
+    
   }, []);
   // const handleNextClick = () => {
   //   if (carouselRef.current) {
@@ -344,14 +349,14 @@ const Post = ({ post }) => {
   );
 };
 
-// Post.propTypes = {
-//   post: PropTypes.shape({
-//     content: PropTypes.any,
-//     images: PropTypes.shape({
-//       map: PropTypes.func,
-//     }),
-//     title: PropTypes.any,
+Post.propTypes = {
+  post: PropTypes.shape({
+    content: PropTypes.any,
+    images: PropTypes.shape({
+      map: PropTypes.func,
+    }),
+    title: PropTypes.any,
 
-//   }),
-// };
+  }),
+};
 export default Post;
