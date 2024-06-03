@@ -1,10 +1,10 @@
 import React from 'react';
+import { WindowWidthProvider } from '../contextAPI/WidthContext';
 
 const App = ({ Component, pageProps }) => (
-  <React.Fragment>
-    <Component {...pageProps}  />
-   
-  </React.Fragment>
+  <WindowWidthProvider>
+  <Component {...pageProps} />
+</WindowWidthProvider>
 );
 
 export default App;

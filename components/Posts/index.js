@@ -1,14 +1,15 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import Post from './Post';
 import Container from '../common/Container';
+// import useWindowWidth from '../hooks/useWindowWidth';
 import useWindowWidth from '../hooks/useWindowWidth';
 const spinnerContainerStyle = {
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  height: '100%' // Make sure this is adjusted to fit your layout
+  height: '100%', // Make sure this is adjusted to fit your layout
 };
 
 const spinnerStyle = {
@@ -17,7 +18,7 @@ const spinnerStyle = {
   borderRadius: '50%',
   width: '40px',
   height: '40px',
-  animation: 'spin 1s linear infinite'
+  animation: 'spin 1s linear infinite',
 };
 
 const PostListContainer = styled.div(() => ({
@@ -52,6 +53,7 @@ export default function Posts() {
   const [isLoading, setIsLoading] = useState(false);
   const [postCount, setPostCount] = useState(10); // Ensuring postCount is initialized to 10
   const [allPostsShown, setAllPostsShown] = useState(false); // Track if all posts are shown
+  // const { isSmallerDevice } = useWindowWidth();
   const { isSmallerDevice } = useWindowWidth();
   console.log(posts);
   const fetchPosts = async (start, limit) => {
